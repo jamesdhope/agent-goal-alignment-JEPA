@@ -4,7 +4,7 @@ This repo demonstrates JEPA for learning a feature space over two language corpo
 
 #### Results:
 
-()[result.png]
+![](result.png)
 
 #### Approach:
 
