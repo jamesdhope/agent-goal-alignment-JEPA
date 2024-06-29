@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     # Initialize the JEPA predictor
     predictor_input_dim = 2 * joint_dim  # Concatenated joint embeddings from both autoencoders
-    predictor_output_dim = 2  # Dimension of the predicted output
+    predictor_output_dim = 1  # Dimension of the predicted output
     predictor = JEPA_Predictor(predictor_input_dim, predictor_output_dim)
 
     # Define optimizer for the predictor
@@ -187,20 +187,17 @@ if __name__ == "__main__":
             joint1, _ = autoencoder1(embedding1)
             joint2, _ = autoencoder2(embedding2)
 
-            # Concatenate joint embeddings
+             # Concatenate joint embeddings
             combined_joint = torch.cat((joint1, joint2), dim=1)
 
             # Forward pass through JEPA predictor
             prediction = predictor(combined_joint)
 
-            # Determine target based on similarity of sentences (adjust according to your task)
-            if sentence1 == sentence2:
-                target = torch.tensor([[1.0, 0.0]], dtype=torch.float32)  # Similar sentences
-            else:
-                target = torch.tensor([[0.0, 1.0]], dtype=torch.float32)  # Different sentences
+            # Calculate target similarity based on distance (assumed to be similar)
+            target_similarity = 1.0 - torch.mean((joint1 - joint2)**2)
 
             # Calculate loss (MSE loss)
-            loss_predictor = nn.MSELoss()(prediction, target)
+            loss_predictor = nn.MSELoss()(prediction, target_similarity.view(1, 1))
 
             # Backward pass and optimization
             optimizer_predictor.zero_grad()
