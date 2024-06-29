@@ -10,7 +10,7 @@ This repo demonstrates JEPA for learning a feature space over two language corpo
 
 1. Training the Predictor: The JEPA model is trained to establish connections between sentences1 and sentences2. This training process involves optimizing the predictor's weights to effectively capture and differentiate semantic similarities and differences between the two sets of sentences. The predictor, through its training, learns to output embeddings (joint1 and joint2) that encode the relationships between sentences1 and sentences2 based on their BERT embeddings.
 
-2. Mapping Predictor Weights: After training, the weights of the predictor (comprising linear layers like fc1, fc2, and predictor) are mapped back into the original sentence space. This mapping allows for the interpretation of how these learned weights influence the embeddings of sentences1 and sentences2. By examining these mapped weights, one can understand which aspects or dimensions of the original sentences contribute most significantly to the predictor's decision-making process. This step is crucial for interpreting and visualizing the semantic relationships identified by the JEPA model in a meaningful way.
+2. Mapping Predictor Weights: After training, the weights of the predictor are mapped back into the original sentence space. This mapping allows for the interpretation of how these learned weights influence the embeddings of sentences1 and sentences2. By examining these mapped weights, one can understand which aspects or dimensions of the original sentences contribute most significantly to the predictor's decision-making process. This step is crucial for interpreting and visualizing the semantic relationships identified by the JEPA model in a meaningful way.
 
 #### Scenario:
 
