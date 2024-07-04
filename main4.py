@@ -53,7 +53,86 @@ class JEPA_Predictor(nn.Module):
         prediction = self.fc(joint_embedding)
         return prediction
 
-def visualize_weights_as_features(model, tokenizer, sentences1, sentences2, title, n_components=10):
+def visualize_weights_as_features(model, tokenizer, sentences1, sentences2, title):
+    # Initialize empty matrices to store weights and importance
+    num_sentences1 = len(sentences1)
+    num_sentences2 = len(sentences2)
+    importance_matrix = np.zeros((num_sentences1, num_sentences2))
+
+    # Get the weights from the linear layer of the model
+    weights = model.fc.weight.detach().numpy()  # Assuming model.fc is the linear layer
+
+    for i, sentence1 in enumerate(sentences1):
+        embedding1 = embedder.get_embedding(sentence1)
+        joint1, _ = autoencoder1(embedding1)
+
+        for j, sentence2 in enumerate(sentences2):
+            embedding2 = embedder.get_embedding(sentence2)
+            joint2, _ = autoencoder2(embedding2)
+
+            # Concatenate joint embeddings
+            combined_joint = torch.cat((joint1, joint2), dim=1)
+
+            # Compute importance of weights for the combined joint embedding
+            importance_matrix[i, j] = np.abs(weights @ combined_joint.detach().numpy().flatten())
+
+    # Plotting the heatmap using Seaborn
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(importance_matrix, cmap='viridis', annot=True, fmt='.2f',
+                xticklabels=sentences2, yticklabels=sentences1, cbar=True)
+
+    # Automatically wrap tick labels for better readability
+    plt.xticks(rotation=45, ha='right')
+    plt.yticks(rotation=0)
+    plt.title(f'{title} - Predictor Weights Importance')
+    plt.xlabel('Sentences in set 2')
+    plt.ylabel('Sentences in set 1')
+    plt.tight_layout()
+    plt.show()
+
+def visualize_predictions_as_features(model, tokenizer, sentences1, sentences2, title, n_components=10):
+    '''
+    Uses JEPA to visualise predictions of model using data it has already seen. 
+    '''
+    sentences = sentences1 + sentences2
+    embeddings = torch.cat([embedder.get_embedding(s) for s in sentences])
+    joint1, _ = autoencoder1(embeddings)
+    joint2, _ = autoencoder2(embeddings)
+    combined_joint = torch.cat((joint1, joint2), dim=1)
+    predictions = model(combined_joint)
+    
+    # Detach and convert predictions to numpy
+    predictions_np = predictions.detach().numpy()
+    
+    # Convert joint1 to numpy for PCA
+    joint1_np = joint1.detach().numpy()
+    
+    # Reduce dimensionality with PCA
+    pca = PCA(n_components=n_components)
+    reduced_joint1 = pca.fit_transform(joint1_np)
+    
+    # Create a DataFrame for better visualization
+    pc_columns = [f'PC {i+1}' for i in range(n_components)]
+    df = pd.DataFrame(reduced_joint1, columns=pc_columns, index=sentences)
+    df['Source'] = ['Sentences 1'] * len(sentences1) + ['Sentences 2'] * len(sentences2)
+    
+    # Add predictions to the DataFrame
+    df['Predictions'] = predictions_np
+    
+    # Plot predictions if needed
+    plt.figure(figsize=(12, 8))
+    sns.barplot(x=df.index, y='Predictions', data=df)
+    plt.xticks(rotation=90)
+    plt.title(f'{title} - Predictions')
+    plt.xlabel('Sentences')
+    plt.ylabel('Prediction Value')
+    plt.show()
+
+
+def visualize_new_embeddings_as_features(model, tokenizer, sentences1, sentences2, title, n_components=10):
+    '''
+    Does not use JEPA. Shows embeddings against corresponding word representations across 10 PCs.
+    '''
     # Concatenate sentences
     sentences = sentences1 + sentences2
     
@@ -63,12 +142,6 @@ def visualize_weights_as_features(model, tokenizer, sentences1, sentences2, titl
     # Get joint embeddings from both autoencoders
     joint1, _ = autoencoder1(embeddings)
     joint2, _ = autoencoder2(embeddings)
-
-    # Concatenate joint embeddings
-    combined_joint = torch.cat((joint1, joint2), dim=1)
-
-    # Forward pass through JEPA predictor
-    predictions = model(combined_joint)
 
     # Convert joint1 to numpy for PCA
     joint1_np = joint1.detach().numpy()
@@ -215,4 +288,8 @@ if __name__ == "__main__":
     torch.save(predictor.state_dict(), "predictor.pth")
 
     # Visualize weights as features in word space
+    
+    #visualize_new_embeddings_as_features(predictor, embedder.tokenizer, sentences1, sentences2, "Weights as Features in Word Space")
+    #visualize_predictions_as_features(predictor, embedder.tokenizer, sentences1, sentences2, "Weights as Features in Word Space")
+
     visualize_weights_as_features(predictor, embedder.tokenizer, sentences1, sentences2, "Weights as Features in Word Space")
