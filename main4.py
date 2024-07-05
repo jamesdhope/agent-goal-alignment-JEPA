@@ -54,6 +54,28 @@ class JEPA_Predictor(nn.Module):
         return prediction
 
 def visualize_weights_as_features(model, tokenizer, sentences1, sentences2, title):
+    '''
+    Visualize the importance of the predictor model's weights for the joint embeddings of pairs of sentences. This visualization helps interpret how the model views the relationship between different sentence pairs in terms of their combined embeddings.
+
+    - The values in the heatmap indicate how strongly the predictor model's weights are influenced by the combined joint embedding of each pair of sentences.
+    - High values in the heatmap suggest that the predictor's weights have a strong influence on the joint embedding of the corresponding pair of sentences.
+    - Low values suggest a weaker influence.
+    - The heatmap does not show the actual predictions (i.e., output values) made by the predictor model for each pair of sentences.
+    - It does not directly reflect how the model would score or classify each pair of sentences in terms of similarity, relevance, or any other specific output metric.
+
+    Interpretation:
+
+    Model Evaluation:
+    - By visualizing the heatmap of importance values, you gain insights into which pairs of sentences the model considers most relevant based on its fixed weights.
+    - This helps understand which features or embeddings from the sentences are critical for the model's decision-making process.
+
+    Comparative Analysis:
+    - You can compare different pairs of sentences to see how they stack up in terms of importance, identifying patterns or biases in the model's focus.
+
+    Post-Training Analysis:
+    - Since the weights are fixed after training, the importance values reflect how well each pair of sentences fits the learned patterns encoded in those weights.
+    - This analysis is a reflection of the model's internal representation and the relationships it has learned during training.
+    '''
     # Initialize empty matrices to store weights and importance
     num_sentences1 = len(sentences1)
     num_sentences2 = len(sentences2)
@@ -73,7 +95,7 @@ def visualize_weights_as_features(model, tokenizer, sentences1, sentences2, titl
             # Concatenate joint embeddings
             combined_joint = torch.cat((joint1, joint2), dim=1)
 
-            # Compute importance of weights for the combined joint embedding
+            # computes the dot product between the weight matrix and the combined joint embedding. This dot product essentially measures how much each weight contributes to the joint embedding's importance.
             importance_matrix[i, j] = np.abs(weights @ combined_joint.detach().numpy().flatten())
 
     # Plotting the heatmap using Seaborn
