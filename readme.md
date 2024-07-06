@@ -2,14 +2,9 @@
 
 This repo demonstrates JEPA for learning a feature space over two language corpora and the potential for using JEPA learnt feature spaces for language generation. Specifically, it is applied here to demonstrate the potential of JEPA in agent alignment / affinity in a dynamic agent based ecosystem. 
 
-
-#### Approach:
-
 The JEPA model is trained to establish connections between sentences1 and sentences2. This training process involves optimizing the predictor's weights to effectively capture and differentiate semantic similarities and differences between the two sets of sentences. The predictor, through its training, learns to output embeddings (joint1 and joint2) that encode the relationships between sentences1 and sentences2 based on their BERT embeddings.
 
-#### Results:
-
-##### JEPA Weights Importance
+#### JEPA Weights Importance
 
 The weights of the predictor are mapped back into the original sentence space. This mapping allows for the interpretation of how these learned weights influence the embeddings of sentences1 and sentences2. By examining these mapped weights, one can understand which aspects or dimensions of the original sentences contribute most significantly to the predictor's decision-making process. This step is crucial for interpreting and visualizing the semantic relationships identified by the JEPA model in a meaningful way.
 
@@ -29,7 +24,7 @@ Interpretting the visualisation:
 - Since the weights are fixed after training, the importance values reflect how well each pair of sentences fits the learned patterns encoded in those weights.
 - This analysis is a reflection of the model's internal representation and the relationships it has learned during training.
 
-##### Prediction
+#### Predictions with the JEPA Predictor
 
 The JEPA predictor is used to make predictions on the sentences it was trained on.
 
