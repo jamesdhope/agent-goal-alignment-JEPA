@@ -13,7 +13,9 @@ The JEPA model is trained to establish connections between sentences1 and senten
 
 The weights of the predictor are mapped back into the original sentence space. This mapping allows for the interpretation of how these learned weights influence the embeddings of sentences1 and sentences2. By examining these mapped weights, one can understand which aspects or dimensions of the original sentences contribute most significantly to the predictor's decision-making process. This step is crucial for interpreting and visualizing the semantic relationships identified by the JEPA model in a meaningful way.
 
-About this visualisation: 
+![](predictor_weights.png)
+
+Approach: 
 - The values in the heatmap indicate how strongly the predictor model's weights are influenced by the combined joint embedding of each pair of sentences.
 - High values in the heatmap suggest that the predictor's weights have a strong influence on the joint embedding of the corresponding pair of sentences.
 - Low values suggest a weaker influence.
@@ -27,11 +29,13 @@ Interpretting the visualisation:
 - Since the weights are fixed after training, the importance values reflect how well each pair of sentences fits the learned patterns encoded in those weights.
 - This analysis is a reflection of the model's internal representation and the relationships it has learned during training.
 
-![](predictor_weights.png)
-
 ##### Prediction
 
-About this visualisation: 
+The JEPA predictor is used to make predictions on the sentences it was trained on.
+
+![](predict.png)
+
+Approach: 
 - Displays the reduced dimensionality of sentence embeddings using Principal Component Analysis (PCA).
 - Uses joint embeddings from two autoencoders to represent the combined information from each sentence pair.
 - Shows the predictions made by the JEPA predictor model for each sentence.
@@ -55,8 +59,6 @@ Heatmap of Predictor Weights Importance:
 - High Values: Suggest a strong influence of the predictor's weights on the joint embeddings for those pairs of sentences.
 - Low Values: Indicate a weaker influence.
 - Patterns: Helps identify which sentence pairs the model considers most relevant and which features or embeddings are critical for the model's decisions.
-
-![](predict.png)
 
 #### Scenario:
 
