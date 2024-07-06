@@ -312,6 +312,6 @@ if __name__ == "__main__":
     # Visualize weights as features in word space
     
     #visualize_new_embeddings_as_features(predictor, embedder.tokenizer, sentences1, sentences2, "Weights as Features in Word Space")
-    #visualize_predictions_as_features(predictor, embedder.tokenizer, sentences1, sentences2, "Weights as Features in Word Space")
+    visualize_predictions_as_features(predictor, embedder.tokenizer, sentences1, sentences2, "Weights as Features in Word Space")
 
     visualize_weights_as_features(predictor, embedder.tokenizer, sentences1, sentences2, "Weights as Features in Word Space")

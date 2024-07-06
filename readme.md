@@ -2,15 +2,61 @@
 
 This repo demonstrates JEPA for learning a feature space over two language corpora and the potential for using JEPA learnt feature spaces for language generation. Specifically, it is applied here to demonstrate the potential of JEPA in agent alignment / affinity in a dynamic agent based ecosystem. 
 
-#### Results:
-
-![](predictor_weights.png)
 
 #### Approach:
 
-1. Training the Predictor: The JEPA model is trained to establish connections between sentences1 and sentences2. This training process involves optimizing the predictor's weights to effectively capture and differentiate semantic similarities and differences between the two sets of sentences. The predictor, through its training, learns to output embeddings (joint1 and joint2) that encode the relationships between sentences1 and sentences2 based on their BERT embeddings.
+The JEPA model is trained to establish connections between sentences1 and sentences2. This training process involves optimizing the predictor's weights to effectively capture and differentiate semantic similarities and differences between the two sets of sentences. The predictor, through its training, learns to output embeddings (joint1 and joint2) that encode the relationships between sentences1 and sentences2 based on their BERT embeddings.
 
-2. Mapping Predictor Weights: After training, the weights of the predictor are mapped back into the original sentence space. This mapping allows for the interpretation of how these learned weights influence the embeddings of sentences1 and sentences2. By examining these mapped weights, one can understand which aspects or dimensions of the original sentences contribute most significantly to the predictor's decision-making process. This step is crucial for interpreting and visualizing the semantic relationships identified by the JEPA model in a meaningful way.
+#### Results:
+
+##### JEPA Weights Importance
+
+The weights of the predictor are mapped back into the original sentence space. This mapping allows for the interpretation of how these learned weights influence the embeddings of sentences1 and sentences2. By examining these mapped weights, one can understand which aspects or dimensions of the original sentences contribute most significantly to the predictor's decision-making process. This step is crucial for interpreting and visualizing the semantic relationships identified by the JEPA model in a meaningful way.
+
+About this visualisation: 
+- The values in the heatmap indicate how strongly the predictor model's weights are influenced by the combined joint embedding of each pair of sentences.
+- High values in the heatmap suggest that the predictor's weights have a strong influence on the joint embedding of the corresponding pair of sentences.
+- Low values suggest a weaker influence.
+- The heatmap does not show the actual predictions (i.e., output values) made by the predictor model for each pair of sentences.
+- It does not directly reflect how the model would score or classify each pair of sentences in terms of similarity, relevance, or any other specific output metric.
+
+Interpretting the visualisation:
+- By visualizing the heatmap of importance values, you gain insights into which pairs of sentences the model considers most relevant based on its fixed weights.
+- This helps understand which features or embeddings from the sentences are critical for the model's decision-making process.
+- You can compare different pairs of sentences to see how they stack up in terms of importance, identifying patterns or biases in the model's focus.
+- Since the weights are fixed after training, the importance values reflect how well each pair of sentences fits the learned patterns encoded in those weights.
+- This analysis is a reflection of the model's internal representation and the relationships it has learned during training.
+
+![](predictor_weights.png)
+
+##### Prediction
+
+About this visualisation: 
+- Displays the reduced dimensionality of sentence embeddings using Principal Component Analysis (PCA).
+- Uses joint embeddings from two autoencoders to represent the combined information from each sentence pair.
+- Shows the predictions made by the JEPA predictor model for each sentence.
+- The heatmap represents the importance of the predictor model's weights for the joint embeddings of pairs of sentences.
+- Illustrates how the model views the relationships between different sentence pairs based on their embeddings.
+
+How to Interpret the Visualization
+
+Bar Plot of Predictions:
+- Height of Bars: Represents the prediction value for each sentence.
+- Comparison Across Sentences: Higher bars indicate higher prediction values, suggesting the model finds certain sentences more relevant or significant.
+- Distribution: Helps identify any trends or patterns in the predictions across different sentences.
+
+PCA Reduced Embeddings:
+- Clusters of Sentences: Sentences close to each other in the PCA plot have similar embeddings, suggesting they are contextually or semantically similar.
+- Principal Components (PCs): The axes represent the principal components, which are the directions of maximum variance in the data.
+- Source of Sentences: The color or label indicating the source (sentences1 or sentences2) helps in understanding how different sets of sentences are positioned relative to each other.
+
+Heatmap of Predictor Weights Importance:
+- Heatmap Values: Indicates the importance of the predictor model's weights for the joint embeddings.
+- High Values: Suggest a strong influence of the predictor's weights on the joint embeddings for those pairs of sentences.
+- Low Values: Indicate a weaker influence.
+- Patterns: Helps identify which sentence pairs the model considers most relevant and which features or embeddings are critical for the model's decisions.
+
+![](predict.png)
 
 #### Scenario:
 
